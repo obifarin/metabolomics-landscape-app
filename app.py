@@ -1,12 +1,22 @@
-import streamlit as st
-import pandas as pd
-import plotly.express as px
-from plotly.subplots import make_subplots
-import plotly.graph_objects as go
-import re
-import smtplib
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
+import sys
+print(f"Python version: {sys.version}")
+print(f"Python path: {sys.executable}")
+
+try:
+    import streamlit as st
+    import pandas as pd
+    import plotly.express as px
+    from plotly.subplots import make_subplots
+    import plotly.graph_objects as go
+    import re
+    import smtplib
+    from email.mime.text import MIMEText
+    from email.mime.multipart import MIMEMultipart
+except ImportError as e:
+    print(f"Error importing required modules: {e}")
+    sys.exit(1)
+
+# Rest of your app code...
 
 
 # Load your dataframe
