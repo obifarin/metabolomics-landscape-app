@@ -16,9 +16,6 @@ except ImportError as e:
     print(f"Error importing required modules: {e}")
     sys.exit(1)
 
-# Rest of your app code...
-
-
 # Load your dataframe
 @st.cache_data
 def load_data():
