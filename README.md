@@ -34,7 +34,9 @@ This Streamlit app, Landscape of Metabolomics Research, is designed to help user
 # Installation
 To run the app, ensure that the required dependencies are installed:
 
+ ```bash
 pip install streamlit pandas plotly openpyxl
+ ```bash
 
 To run the app locally, use the command:
 
