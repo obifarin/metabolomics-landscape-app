@@ -46,16 +46,16 @@ streamlit run app.py
 # Dependencies
 The app relies on the following libraries:
 
-Streamlit: For the web interface.
-Pandas: For handling the dataset.
-Plotly: For creating interactive visualizations.
-Openpyxl: To read Excel files.
-Smtplib: For sending emails.
+- Streamlit: For the web interface.
+- Pandas: For handling the dataset.
+- Plotly: For creating interactive visualizations.
+- Openpyxl: To read Excel files.
+- Smtplib: For sending emails.
 
 # Data
 The dataset used is an Excel file (metabolomics_landscape_app_01MAR2024.xlsx) containing research papers with columns including:
 
-tsne_2D_x, tsne_2D_y: Embedding coordinates for plotting.
-predicted_category: The research cluster assigned to each paper.
-abstract, title, authors: Metadata for each paper.
-pub_year: Publication year.
+- tsne_2D_x, tsne_2D_y: Embedding coordinates for plotting.
+- predicted_category: The research cluster assigned to each paper.
+- abstract, title, authors: Metadata for each paper.
+- pub_year: Publication year.
