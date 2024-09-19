@@ -10,9 +10,8 @@ This Streamlit app, Landscape of Metabolomics Research, is designed to help user
 - Users can select specific research clusters and keywords to narrow down their search.
 - Customizable search parameters include selecting specific research clusters, keywords, and searching by abstract or title.
 
-2.Author Highlighting:
+2. Author Highlighting:
 - Users can search for publications by specific authors and visualize their work in the embeddings plot.                       
-
 3. Email Findings:
 - The app provides functionality to submit findings via email, allowing users to send their research results directly from the app.
 
