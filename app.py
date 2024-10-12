@@ -58,7 +58,7 @@ def clusterByKeywords2(cluster_name, keywords, location, include_none):
                           size_max=3)  # This sets the maximum marker size
 
     for trace in fig_time['data']:
-        trace.marker.size = 7  # Set a small fixed size for all markers
+        trace.marker.size = 4  # Set a small fixed size for all markers
         fig.add_trace(trace, row=1, col=1)
 
     fig_keywords = px.scatter(cluster_df, 
@@ -71,7 +71,7 @@ def clusterByKeywords2(cluster_name, keywords, location, include_none):
                               size_max=3)  # This sets the maximum marker size
 
     for trace in fig_keywords['data']:
-        trace.marker.size = 7  # Set a small fixed size for all markers
+        trace.marker.size = 4  # Set a small fixed size for all markers
         fig.add_trace(trace, row=2, col=1)
 
     # Remove the previous fig.update_traces() call for marker size
