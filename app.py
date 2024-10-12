@@ -70,10 +70,10 @@ def clusterByKeywords2(cluster_name, keywords, location, include_none):
         fig.add_trace(trace, row=2, col=1)
 
     # For the year plot
-    fig.update_traces(marker=dict(size=1, opacity=0.7), selector=dict(row=1))
+    fig.update_traces(marker=dict(size=0.5, opacity=0.7), selector=dict(row=1))
 
     # For the keyword plot
-    fig.update_traces(marker=dict(size=1, opacity=0.7), selector=dict(row=2))
+    fig.update_traces(marker=dict(size=0.5, opacity=0.7), selector=dict(row=2))
 
     fig.update_layout(
         title="Embeddings Explorer",
