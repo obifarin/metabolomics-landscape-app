@@ -50,12 +50,15 @@ def clusterByKeywords2(cluster_name, keywords, location, include_none):
         vertical_spacing=0.1
     )
 
+    # Set marker size directly in the scatter plot creation
     fig_time = px.scatter(cluster_df, x='tsne_2D_x', y='tsne_2D_y', color='pub_year',
                           color_continuous_scale=color_scale_time, opacity=0.7,
                           hover_data=['title'],
-                          range_color=[1998, 2024])  # Set fixed range for color scale
+                          range_color=[1998, 2024],
+                          size_max=3)  # This sets the maximum marker size
 
     for trace in fig_time['data']:
+        trace.marker.size = 0.5  # Set a small fixed size for all markers
         fig.add_trace(trace, row=1, col=1)
 
     fig_keywords = px.scatter(cluster_df, 
@@ -64,16 +67,14 @@ def clusterByKeywords2(cluster_name, keywords, location, include_none):
                               color='keyword_presence',
                               color_discrete_sequence=px.colors.qualitative.Bold,
                               opacity=0.7, 
-                              hover_data=['title'])
+                              hover_data=['title'],
+                              size_max=3)  # This sets the maximum marker size
 
     for trace in fig_keywords['data']:
+        trace.marker.size = 0.5  # Set a small fixed size for all markers
         fig.add_trace(trace, row=2, col=1)
 
-    # For the year plot
-    fig.update_traces(marker=dict(size=0.5, opacity=0.7), selector=dict(row=1))
-
-    # For the keyword plot
-    fig.update_traces(marker=dict(size=0.5, opacity=0.7), selector=dict(row=2))
+    # Remove the previous fig.update_traces() call for marker size
 
     fig.update_layout(
         title="Embeddings Explorer",
