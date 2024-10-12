@@ -53,7 +53,7 @@ def clusterByKeywords2(cluster_name, keywords, location, include_none):
     fig_time = px.scatter(cluster_df, x='tsne_2D_x', y='tsne_2D_y', color='pub_year',
                           color_continuous_scale=color_scale_time, opacity=0.7,
                           hover_data=['title'],
-                          range_color=[1998, 2024])
+                          range_color=[1998, 2024])  # Set fixed range for color scale
 
     for trace in fig_time['data']:
         fig.add_trace(trace, row=1, col=1)
@@ -63,8 +63,6 @@ def clusterByKeywords2(cluster_name, keywords, location, include_none):
                               y='tsne_2D_y', 
                               color='keyword_presence',
                               color_discrete_sequence=px.colors.qualitative.Bold,
-                              #px.colors.qualitative.Plotly px.colors.qualitative.Dark24
-                              #px.colors.qualitative.Light24 px.colors.qualitative.Alphabet
                               opacity=0.7, 
                               hover_data=['title'])
 
@@ -80,9 +78,12 @@ def clusterByKeywords2(cluster_name, keywords, location, include_none):
         title_font=dict(size=24, family='Arial, sans-serif', color='#333333'),
         font=dict(size=14, family='Arial, sans-serif', color='#333333'),
         margin=dict(l=50, r=50, t=80, b=50),
-        coloraxis=dict(colorscale=color_scale_time, colorbar=dict(title="Year", y=0.85, thickness=15, len=0.3), range=[1998, 2024]),
+        coloraxis=dict(colorscale=color_scale_time, colorbar=dict(title="Year", y=0.85, thickness=15, len=0.3)),
         coloraxis2=dict(colorbar=dict(title="Keyword Presence", y=0.35, thickness=15, len=0.3)),
     )
+
+    # Set the range for the color axis
+    fig.update_layout(coloraxis_cmin=1998, coloraxis_cmax=2024)
 
     fig.update_xaxes(title='', showticklabels=False, showgrid=False, zeroline=False)
     fig.update_yaxes(title='', showticklabels=False, showgrid=False, zeroline=False)
