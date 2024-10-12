@@ -63,13 +63,17 @@ def clusterByKeywords2(cluster_name, keywords, location, include_none):
                               y='tsne_2D_y', 
                               color='keyword_presence',
                               color_discrete_sequence=px.colors.qualitative.Bold,
-                              opacity=0.3, 
+                              opacity=0.7, 
                               hover_data=['title'])
 
     for trace in fig_keywords['data']:
         fig.add_trace(trace, row=2, col=1)
 
-    fig.update_traces(marker=dict(size=7, opacity=0.7))
+    # For the year plot
+    fig.update_traces(marker=dict(size=4, opacity=0.7), selector=dict(row=1))
+
+    # For the keyword plot
+    fig.update_traces(marker=dict(size=3, opacity=0.7), selector=dict(row=2))
 
     fig.update_layout(
         title="Embeddings Explorer",
