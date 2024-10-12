@@ -33,9 +33,9 @@ def clusterByKeywords2(cluster_name, keywords, location, include_none):
     cluster_df['keyword_presence'] = 'None'
 
     color_scale_time = [
-        (0, 'rgb(70, 1, 83)'),  
-        (0.5, 'rgb(159, 23, 124)'), 
-        (1, 'rgb(253, 231, 37)')  
+        (0, 'rgb(0, 0, 255)'),  #70, 1, 83
+        (0.5, 'rgb(255, 255, 0)'),  #159, 23, 124
+        (1, 'rgb(255, 0, 0)')   #253, 231, 37
     ]
 
     for keyword in keywords:
