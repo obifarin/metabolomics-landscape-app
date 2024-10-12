@@ -80,7 +80,7 @@ def clusterByKeywords2(cluster_name, keywords, location, include_none):
         title_font=dict(size=24, family='Arial, sans-serif', color='#333333'),
         font=dict(size=14, family='Arial, sans-serif', color='#333333'),
         margin=dict(l=50, r=50, t=80, b=50),
-        coloraxis=dict(colorscale=color_scale_time, colorbar=dict(title="Year", y=0.85, thickness=15, len=0.3)),
+        coloraxis=dict(colorscale=color_scale_time, colorbar=dict(title="Year", y=0.85, thickness=15, len=0.3), range=[1998, 2024]),
         coloraxis2=dict(colorbar=dict(title="Keyword Presence", y=0.35, thickness=15, len=0.3)),
     )
 
