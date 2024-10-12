@@ -63,7 +63,7 @@ def clusterByKeywords2(cluster_name, keywords, location, include_none):
                               y='tsne_2D_y', 
                               color='keyword_presence',
                               color_discrete_sequence=px.colors.qualitative.Bold,
-                              opacity=0.7, 
+                              opacity=0.3, 
                               hover_data=['title'])
 
     for trace in fig_keywords['data']:
