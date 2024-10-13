@@ -32,6 +32,98 @@ def clusterByKeywords2(cluster_name, keywords, location, include_none):
 
     cluster_df['keyword_presence'] = 'None'
 
+    # Apply keyword filtering
+    for keyword in keywords:
+        cluster_df.loc[cluster_df[location].apply(lambda x: bool(re.search(keyword, x, re.IGNORECASE))), 'keyword_presence'] = keyword
+
+    if not include_none:
+        cluster_df = cluster_df[cluster_df['keyword_presence'] != 'None']
+
+    # Recalculate the min and max years from the filtered dataset
+    min_year = cluster_df['pub_year'].min()
+    max_year = cluster_df['pub_year'].max()
+
+    color_scale_time = [
+        (0, 'rgb(0, 0, 255)'),  # Blue for oldest
+        (0.5, 'rgb(255, 255, 0)'),  # Yellow for middle
+        (1, 'rgb(255, 0, 0)')   # Red for newest
+    ]
+
+    fig = make_subplots(
+        rows=2, cols=1, 
+        subplot_titles=("Colored by Year", "Colored by Keyword Presence"),
+        vertical_spacing=0.1
+    )
+
+    # Set marker size directly in the scatter plot creation
+    fig_time = px.scatter(cluster_df, x='tsne_2D_x', y='tsne_2D_y', color='pub_year',
+                          color_continuous_scale=color_scale_time, opacity=0.7,
+                          hover_data=['title'],
+                          range_color=[min_year, max_year],  # Use dynamic range based on filtered subset
+                          size_max=3)  # This sets the maximum marker size
+
+    for trace in fig_time['data']:
+        trace.marker.size = 5  # Set a small fixed size for all markers
+        fig.add_trace(trace, row=1, col=1)
+
+    fig_keywords = px.scatter(cluster_df, 
+                              x='tsne_2D_x', 
+                              y='tsne_2D_y', 
+                              color='keyword_presence',
+                              color_discrete_sequence=px.colors.qualitative.Alphabet,
+                              opacity=0.7, 
+                              hover_data=['title'],
+                              size_max=3)  # This sets the maximum marker size
+
+    for trace in fig_keywords['data']:
+        trace.marker.size = 5  # Set a small fixed size for all markers
+        fig.add_trace(trace, row=2, col=1)
+
+    fig.update_layout(
+        title="Embeddings Explorer",
+        plot_bgcolor='white',
+        height=700, width=1000,
+        title_font=dict(size=24, family='Arial, sans-serif', color='#333333'),
+        font=dict(size=14, family='Arial, sans-serif', color='#333333'),
+        margin=dict(l=50, r=50, t=80, b=50),
+        coloraxis=dict(colorscale=color_scale_time, 
+                       colorbar=dict(title="Year", y=0.85, thickness=15, len=0.3),
+                       cmin=min_year, cmax=max_year),  # Set dynamic range for filtered subset
+        coloraxis2=dict(colorbar=dict(title="Keyword Presence", y=0.35, thickness=15, len=0.3)),
+    )
+
+    fig.update_xaxes(title='', showticklabels=False, showgrid=False, zeroline=False)
+    fig.update_yaxes(title='', showticklabels=False, showgrid=False, zeroline=False)
+
+    fig.update_xaxes(showline=True, linewidth=1, linecolor='lightgray', mirror=True)
+    fig.update_yaxes(showline=True, linewidth=1, linecolor='lightgray', mirror=True)
+
+    fig.update_annotations(font_size=18)
+
+    fig.update_layout(
+        legend=dict(
+            title=dict(text='Keywords'),
+            orientation="h",
+            yanchor="bottom",
+            y=-0.1,
+            xanchor="center",
+            x=0.5,
+            bgcolor="rgba(255,255,255,0.8)",
+            bordercolor="lightgray",
+            borderwidth=1
+        )
+    )
+
+    return fig
+
+
+    if cluster_name != 'All embeddings':
+        cluster_df = df[df['predicted_category'] == cluster_name]
+    else:
+        cluster_df = df
+
+    cluster_df['keyword_presence'] = 'None'
+
     # Get the min and max years from the filtered dataset
     min_year = cluster_df['pub_year'].min()
     max_year = cluster_df['pub_year'].max()
@@ -78,7 +170,6 @@ def clusterByKeywords2(cluster_name, keywords, location, include_none):
         trace.marker.size = 5  # Set a small fixed size for all markers
         fig.add_trace(trace, row=2, col=1)
 
-    # Remove the previous fig.update_traces() call for marker size
 
     fig.update_layout(
         title="Embeddings Explorer",
