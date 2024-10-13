@@ -69,7 +69,7 @@ def clusterByKeywords2(cluster_name, keywords, location, include_none):
                               x='tsne_2D_x', 
                               y='tsne_2D_y', 
                               color='keyword_presence',
-                              color_discrete_sequence=px.colors.qualitative.Bold,
+                              color_discrete_sequence=px.colors.qualitative.Alphabet, #px.colors.qualitative.Bold
                               opacity=0.7, 
                               hover_data=['title'],
                               size_max=3)  # This sets the maximum marker size
