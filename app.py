@@ -37,9 +37,9 @@ def clusterByKeywords2(cluster_name, keywords, location, include_none):
     max_year = cluster_df['pub_year'].max()
 
     color_scale_time = [
-        (0, 'rgb(0, 0, 255)'),  #70, 1, 83
-        (0.5, 'rgb(255, 255, 0)'),  #159, 23, 124
-        (1, 'rgb(255, 0, 0)')   #253, 231, 37
+        (0, 'rgb(0, 0, 255)'),  # Blue for oldest
+        (0.5, 'rgb(255, 255, 0)'),  # Yellow for middle
+        (1, 'rgb(255, 0, 0)')   # Red for newest
     ]
 
     for keyword in keywords:
