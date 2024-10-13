@@ -32,6 +32,10 @@ def clusterByKeywords2(cluster_name, keywords, location, include_none):
 
     cluster_df['keyword_presence'] = 'None'
 
+    # Get the min and max years from the filtered dataset
+    min_year = cluster_df['pub_year'].min()
+    max_year = cluster_df['pub_year'].max()
+
     color_scale_time = [
         (0, 'rgb(0, 0, 255)'),  #70, 1, 83
         (0.5, 'rgb(255, 255, 0)'),  #159, 23, 124
@@ -54,7 +58,7 @@ def clusterByKeywords2(cluster_name, keywords, location, include_none):
     fig_time = px.scatter(cluster_df, x='tsne_2D_x', y='tsne_2D_y', color='pub_year',
                           color_continuous_scale=color_scale_time, opacity=0.7,
                           hover_data=['title'],
-                          range_color=[1998, 2024],
+                          range_color=[min_year, max_year],  # Use dynamic range
                           size_max=3)  # This sets the maximum marker size
 
     for trace in fig_time['data']:
@@ -83,12 +87,11 @@ def clusterByKeywords2(cluster_name, keywords, location, include_none):
         title_font=dict(size=24, family='Arial, sans-serif', color='#333333'),
         font=dict(size=14, family='Arial, sans-serif', color='#333333'),
         margin=dict(l=50, r=50, t=80, b=50),
-        coloraxis=dict(colorscale=color_scale_time, colorbar=dict(title="Year", y=0.85, thickness=15, len=0.3)),
+        coloraxis=dict(colorscale=color_scale_time, 
+                       colorbar=dict(title="Year", y=0.85, thickness=15, len=0.3),
+                       cmin=min_year, cmax=max_year),  # Set dynamic range
         coloraxis2=dict(colorbar=dict(title="Keyword Presence", y=0.35, thickness=15, len=0.3)),
     )
-
-    # Set the range for the color axis
-    fig.update_layout(coloraxis_cmin=1998, coloraxis_cmax=2024)
 
     fig.update_xaxes(title='', showticklabels=False, showgrid=False, zeroline=False)
     fig.update_yaxes(title='', showticklabels=False, showgrid=False, zeroline=False)
