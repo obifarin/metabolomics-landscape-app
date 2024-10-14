@@ -402,7 +402,7 @@ The author search identifies and highlights papers authored by a specified indiv
         st.plotly_chart(fig)
 
 
-    st.header("Submit Your Findings")
+    st.header("Share Your Findings")
     findings = st.text_area("Enter your findings here")
 
     if st.button("Submit Findings"):
