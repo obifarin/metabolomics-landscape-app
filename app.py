@@ -231,7 +231,7 @@ def highlightAuthor(author_name, show_other):
 #         return False
 
 st.title("Landscape of :red[_Metabolomics_] Research 📄")
-st.write("**_Aditya Simhadri_** and **_Olatomiwa O. Bifarin_**, Fernández Lab, Georgia Tech")
+st.write("**_Aditya Simhadri_** and [**_Olatomiwa O. Bifarin_**](https://www.linkedin.com/in/obifarin/), [Fernández Lab](https://sites.gatech.edu/fernandez/), Georgia Tech")
 
 page = st.sidebar.selectbox("Choose a page", ["Home", "Embeddings Explorer"])
 
