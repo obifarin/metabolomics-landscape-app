@@ -230,8 +230,8 @@ def highlightAuthor(author_name, show_other):
 #         st.error(f"Error sending email: {e}")
 #         return False
 
-st.title("Landscape of :red[Metabolomics] Research")
-st.write("Aditya Simhadri and Olatomiwa O. Bifarin, Fernández Lab, Georgia Tech")
+st.title("Landscape of :red[_Metabolomics_] Research 📄")
+st.write("**Aditya Simhadri** and **Olatomiwa O. Bifarin**, Fernández Lab, Georgia Tech")
 
 page = st.sidebar.selectbox("Choose a page", ["Home", "Embeddings Explorer"])
 
@@ -242,9 +242,8 @@ if page == "Home":
              We apply natural language processing techniques to analyze scientific paper 
              abstracts in the field. Using PubMedBERT, a transformer-based encoder model, 
              we generate embeddings—numerical representations of the abstracts. 
-             This application allows you to interact with these embeddings.
+             This application allows you to interact with these embeddings. Watch a demo below :video_camera:
              
-            Watch a demo below :video_camera: 
     """)
     st.video("https://www.youtube.com/watch?v=eHrCx2LhdCk")
 elif page == "Embeddings Explorer":
