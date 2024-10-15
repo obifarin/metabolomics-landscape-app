@@ -295,19 +295,19 @@ The author search identifies and highlights papers authored by a specified indiv
 
 
     with col1:
-        button1 = st.button("Facundo Fernandez")
+        button1 = st.button("Jeremy Nicholson")
             
 
     with col2:
-        button2 = st.button("Arthur S. Edison")
+        button2 = st.button("Oliver Fiehn")
             
         
     if button1:
-        fig = highlightAuthor("Facundo Fernandez", show_other)
+        fig = highlightAuthor("Jeremy Nicholson", show_other)
         st.plotly_chart(fig)
 
     if button2:
-        fig = highlightAuthor("Arthur Edison", show_other)
+        fig = highlightAuthor("Oliver Fiehn", show_other)
         st.plotly_chart(fig)
 
 
