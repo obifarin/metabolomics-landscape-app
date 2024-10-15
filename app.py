@@ -313,7 +313,7 @@ elif page == "Embeddings Explorer":
         st.plotly_chart(fig)
 
 
-    st.header("Share Your :blue[Findings] 🔍")
+    st.header("Share Your :blue[_Findings_] 🔍")
     st.write("Kindly share your findings to this email: obifarin3@gatech.edu")
     # findings = st.text_area("Enter your findings here")
 
