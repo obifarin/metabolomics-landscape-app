@@ -207,30 +207,28 @@ def highlightAuthor(author_name, show_other):
     return fig  # Return the constructed figure object
 
 # Comment out the email function for now
-''' 
-def send_email(subject, body, to_email):
-    from_email = "adityasimhadri1@gmail.com"  # Replace with your email
-    from_password = "dixy zovy anvu qufz"  # Replace with your app password
+# def send_email(subject, body, to_email):
+#     from_email = "adityasimhadri1@gmail.com"  # Replace with your email
+#     from_password = "dixy zovy anvu qufz"  # Replace with your app password
 
-    msg = MIMEMultipart()
-    msg['From'] = from_email
-    msg['To'] = to_email
-    msg['Subject'] = subject
+#     msg = MIMEMultipart()
+#     msg['From'] = from_email
+#     msg['To'] = to_email
+#     msg['Subject'] = subject
 
-    msg.attach(MIMEText(body, 'plain'))
+#     msg.attach(MIMEText(body, 'plain'))
 
-    try:
-        server = smtplib.SMTP('smtp.gmail.com', 587)
-        server.starttls()
-        server.login(from_email, from_password)
-        text = msg.as_string()
-        server.sendmail(from_email, to_email, text)
-        server.quit()
-        return True
-    except Exception as e:
-        st.error(f"Error sending email: {e}")
-        return False
-'''
+#     try:
+#         server = smtplib.SMTP('smtp.gmail.com', 587)
+#         server.starttls()
+#         server.login(from_email, from_password)
+#         text = msg.as_string()
+#         server.sendmail(from_email, to_email, text)
+#         server.quit()
+#         return True
+#     except Exception as e:
+#         st.error(f"Error sending email: {e}")
+#         return False
 
 st.title("App: Landscape of Metabolomics Research")
 
@@ -316,14 +314,12 @@ The author search identifies and highlights papers authored by a specified indiv
 
     st.header("Share Your Findings")
     st.write("Kindly share your findings to this email: obifarin3@gatech.edu")
-'''
-    findings = st.text_area("Enter your findings here")
+    # findings = st.text_area("Enter your findings here")
 
-    if st.button("Submit Findings"):
-        if findings:
-            email_sent = send_email("Research Findings", findings, "obifarin3@gatech.edu")
-            if email_sent:
-                st.success("Email sent successfully")
-        else:
-            st.error("Please enter your findings before submitting")
-'''
+    # if st.button("Submit Findings"):
+    #     if findings:
+    #         email_sent = send_email("Research Findings", findings, "obifarin3@gatech.edu")
+    #         if email_sent:
+    #             st.success("Email sent successfully")
+    #     else:
+    #         st.error("Please enter your findings before submitting")
