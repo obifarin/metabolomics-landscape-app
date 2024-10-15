@@ -230,12 +230,13 @@ def highlightAuthor(author_name, show_other):
 #         st.error(f"Error sending email: {e}")
 #         return False
 
-st.title("Landscape of Metabolomics Research")
+st.title("Landscape of :red[Metabolomics] Research")
+st.write("Aditya Simhadri and Olatomiwa O. Bifarin, Fernández Lab, Georgia Tech")
 
 page = st.sidebar.selectbox("Choose a page", ["Home", "Embeddings Explorer"])
 
 if page == "Home":
-    st.header("About the study")
+    st.subheader("About the study")
     st.write("""
     The goal of this work is to visualize and explore trends in metabolomics research. 
              We apply natural language processing techniques to analyze scientific paper 
@@ -243,7 +244,7 @@ if page == "Home":
              we generate embeddings—numerical representations of the abstracts. 
              This application allows you to interact with these embeddings.
              
-            Watch the video below to learn more about the study.
+            Watch a demo below :video_camera: 
     """)
     st.video("https://www.youtube.com/watch?v=eHrCx2LhdCk")
 elif page == "Embeddings Explorer":
