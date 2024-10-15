@@ -235,7 +235,7 @@ st.write("**_Aditya Simhadri_** and **_Olatomiwa O. Bifarin_**, Fernández Lab, 
 
 page = st.sidebar.selectbox("Choose a page", ["Home", "Embeddings Explorer"])
 
-if page == "Home 🏠":
+if page == "Home":
     st.subheader("About the Study")
     st.write("""
     The goal of this work is to visualize and explore trends in metabolomics research. 
@@ -247,7 +247,7 @@ if page == "Home 🏠":
              
     """)
     st.video("https://www.youtube.com/watch?v=eHrCx2LhdCk")
-elif page == "Embeddings Explorer 🌐":
+elif page == "Embeddings Explorer":
     st.header("Embeddings Explorer")
     with st.expander("How to use"):
         
