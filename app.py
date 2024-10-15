@@ -237,14 +237,13 @@ page = st.sidebar.selectbox("Choose a page", ["Home", "Embeddings Explorer"])
 if page == "Home":
     st.header("About the study")
     st.write("""
-    The goal of this work is to visualize and understand trends in metabolomics research. 
-             We use natural language processing techniques to analyze abstracts of scientific 
-             papers in the field. A transformer-based encoder model, PubMedBERT, is employed to 
-             generate embeddings — numerical representations of the abstracts. With plans to 
-             leverage open source LLM models like Llama 3.1 for topic modelling. **This app allows you 
-             to interact with the embeddings.** 
+    The goal of this work is to visualize and explore trends in metabolomics research. 
+             We apply natural language processing techniques to analyze scientific paper 
+             abstracts in the field. Using PubMedBERT, a transformer-based encoder model, 
+             we generate embeddings—numerical representations of the abstracts. 
+             This application allows you to interact with these embeddings.
              
-            Watch the video below to learn more about the study. 
+            **Watch the video below to learn more about the study.** 
     """)
     st.video("https://www.youtube.com/watch?v=eHrCx2LhdCk")
 elif page == "Embeddings Explorer":
@@ -253,7 +252,8 @@ elif page == "Embeddings Explorer":
         
         st.write("""On the sidebar, input the desired research cluster and keywords, and choose whether 
                  to search in abstracts or titles. Click 'Generate Plot' to visualize t-SNE embeddings 
-                 colored by publication year and keyword presence. Note: If an embedding matches multiple keywords in the document, the value or color corresponding to the last keyword entered will be shown.""")
+                 colored by publication year and keyword presence. **Note**: If an embedding matches multiple 
+                 keywords in the document, the value or color corresponding to the last keyword entered will be shown.""")
         
 
     with st.expander("Author Search Implementation"):
