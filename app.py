@@ -286,7 +286,7 @@ elif page == "Embeddings Explorer":
     show_other = st.checkbox("Show Other Embeddings")
 
     # Create two buttons next to each other with minimal space
-    col1, col2, col3 = st.columns([.25,.75])
+    col1, col2, col3 = st.columns([.25,.25,.25])
 
     if st.button("Search"):
         if author_name:
