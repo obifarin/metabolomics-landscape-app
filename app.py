@@ -110,10 +110,8 @@ def clusterByKeywords2(cluster_name, keywords, location, include_none):
             x=0.5,
             bgcolor="rgba(255,255,255,0.8)",
             bordercolor="lightgray",
-            borderwidth=1,
-            itemsizing='constant'  # Ensure consistent legend item sizes
-        ),
-        legend_symbol_size=15 #Set the size of the legend markers
+            borderwidth=1
+        )
     )
 
     return fig
