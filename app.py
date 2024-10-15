@@ -77,7 +77,6 @@ def clusterByKeywords2(cluster_name, keywords, location, include_none):
 
     for trace in fig_keywords['data']:
         trace.marker.size = 5  # Set a small fixed size for all markers
-        trace.marker.size_in_legend = 15  # Increase the size of the legend markers
         fig.add_trace(trace, row=2, col=1)
 
     fig.update_layout(
@@ -113,7 +112,8 @@ def clusterByKeywords2(cluster_name, keywords, location, include_none):
             bordercolor="lightgray",
             borderwidth=1,
             itemsizing='constant'  # Ensure consistent legend item sizes
-        )
+        ),
+        legend_symbol_size=15 #Set the size of the legend markers
     )
 
     return fig
