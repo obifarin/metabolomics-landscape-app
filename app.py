@@ -9,9 +9,9 @@ try:
     from plotly.subplots import make_subplots
     import plotly.graph_objects as go
     import re
-    import smtplib
-    from email.mime.text import MIMEText
-    from email.mime.multipart import MIMEMultipart
+    #import smtplib
+    #from email.mime.text import MIMEText
+    #from email.mime.multipart import MIMEMultipart
 except ImportError as e:
     print(f"Error importing required modules: {e}")
     sys.exit(1)
@@ -206,6 +206,8 @@ def highlightAuthor(author_name, show_other):
 
     return fig  # Return the constructed figure object
 
+# Comment out the email function for now
+''' 
 def send_email(subject, body, to_email):
     from_email = "adityasimhadri1@gmail.com"  # Replace with your email
     from_password = "dixy zovy anvu qufz"  # Replace with your app password
@@ -228,6 +230,7 @@ def send_email(subject, body, to_email):
     except Exception as e:
         st.error(f"Error sending email: {e}")
         return False
+'''
 
 st.title("App: Landscape of Metabolomics Research")
 
@@ -312,12 +315,15 @@ The author search identifies and highlights papers authored by a specified indiv
 
 
     st.header("Share Your Findings")
+    st.write("Kindly share your findings to this email: obifarin3@gatech.edu")
+'''
     findings = st.text_area("Enter your findings here")
 
     if st.button("Submit Findings"):
         if findings:
-            email_sent = send_email("Research Findings", findings, "olatomiwa.bifarin@chemistry.gatech.edu")
+            email_sent = send_email("Research Findings", findings, "obifarin3@gatech.edu")
             if email_sent:
                 st.success("Email sent successfully")
         else:
             st.error("Please enter your findings before submitting")
+'''
