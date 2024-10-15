@@ -286,7 +286,7 @@ elif page == "Embeddings Explorer":
     show_other = st.checkbox("Show Other Embeddings")
 
     # Create two buttons next to each other with minimal space
-    col1, col2 = st.columns([.25,.75])
+    col1, col2, col3 = st.columns([.25,.75])
 
     if st.button("Search"):
         if author_name:
@@ -302,6 +302,9 @@ elif page == "Embeddings Explorer":
 
     with col2:
         button2 = st.button("Oliver Fiehn")
+
+    with col3:
+        button3 = st.button("Alisdair Fernie")
             
         
     if button1:
@@ -310,6 +313,10 @@ elif page == "Embeddings Explorer":
 
     if button2:
         fig = highlightAuthor("Oliver Fiehn", show_other)
+        st.plotly_chart(fig)
+
+    if button3:
+        fig = highlightAuthor("Alisdair Fernie", show_other)
         st.plotly_chart(fig)
 
 
