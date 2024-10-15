@@ -231,22 +231,23 @@ def highlightAuthor(author_name, show_other):
 #         return False
 
 st.title("Landscape of :red[_Metabolomics_] Research 📄")
-st.write("**Aditya Simhadri** and **Olatomiwa O. Bifarin**, Fernández Lab, Georgia Tech")
+st.write("**_Aditya Simhadri_** and **_Olatomiwa O. Bifarin_**, Fernández Lab, Georgia Tech")
 
 page = st.sidebar.selectbox("Choose a page", ["Home", "Embeddings Explorer"])
 
-if page == "Home":
-    st.subheader("About the study")
+if page == "Home 🏠":
+    st.subheader("About the Study")
     st.write("""
     The goal of this work is to visualize and explore trends in metabolomics research. 
              We apply natural language processing techniques to analyze scientific paper 
              abstracts in the field. Using PubMedBERT, a transformer-based encoder model, 
              we generate embeddings—numerical representations of the abstracts. 
-             This application allows you to interact with these embeddings. Watch a demo below :video_camera:
+             This application allows you to interact with these embeddings. Watch a demo of 
+             how to use the app below :video_camera:
              
     """)
     st.video("https://www.youtube.com/watch?v=eHrCx2LhdCk")
-elif page == "Embeddings Explorer":
+elif page == "Embeddings Explorer 🌐":
     st.header("Embeddings Explorer")
     with st.expander("How to use"):
         
