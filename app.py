@@ -230,7 +230,7 @@ def highlightAuthor(author_name, show_other):
 #         st.error(f"Error sending email: {e}")
 #         return False
 
-st.title("App: Landscape of Metabolomics Research")
+st.title("Landscape of Metabolomics Research")
 
 page = st.sidebar.selectbox("Choose a page", ["Home", "Embeddings Explorer"])
 
@@ -243,7 +243,7 @@ if page == "Home":
              we generate embeddings—numerical representations of the abstracts. 
              This application allows you to interact with these embeddings.
              
-            **Watch the video below to learn more about the study.** 
+            Watch the video below to learn more about the study.
     """)
     st.video("https://www.youtube.com/watch?v=eHrCx2LhdCk")
 elif page == "Embeddings Explorer":
