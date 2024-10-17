@@ -293,9 +293,7 @@ if page == "Home":
              We apply natural language processing techniques to analyze scientific paper 
              abstracts in the field. Using PubMedBERT, a transformer-based encoder model, 
              we generate embeddings—numerical representations of the abstracts. 
-             This application allows you to interact with these embeddings. Watch a demo of 
-             how to use the app below :video_camera:
-             
+             This application allows you to interact with these embeddings. 
     """)
 
     st.subheader(""" Demo of App :video_camera:""")
