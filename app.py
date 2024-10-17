@@ -66,11 +66,14 @@ def clusterByKeywords2(cluster_name, keywords, location, include_none):
         trace.marker.size = 5  # Set a small fixed size for all markers
         fig.add_trace(trace, row=1, col=1)
 
+    # Modify the color assignment for 'None' keyword
+    cluster_df.loc[cluster_df['keyword_presence'] == 'None', 'keyword_presence'] = 'No Keyword Match'
+
     fig_keywords = px.scatter(cluster_df, 
                               x='tsne_2D_x', 
                               y='tsne_2D_y', 
                               color='keyword_presence',
-                              color_discrete_sequence=px.colors.qualitative.Alphabet,
+                              color_discrete_sequence=px.colors.qualitative.Alphabet[1:] + ['rgba(200, 200, 200, 0.3)'],
                               opacity=0.7, 
                               hover_data=['title'],
                               size_max=3)  # This sets the maximum marker size
@@ -331,3 +334,4 @@ elif page == "Embeddings Explorer":
     #             st.success("Email sent successfully")
     #     else:
     #         st.error("Please enter your findings before submitting")
+
