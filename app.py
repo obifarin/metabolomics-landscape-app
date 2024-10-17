@@ -50,7 +50,7 @@ def clusterByKeywords2(cluster_name, keywords, location, include_none):
     ]
 
     # Define a faint, transparent gray color for 'No Keyword Match'
-    no_match_color = 'rgba(200, 200, 200, 0.3)'
+    no_match_color = 'rgba(200, 200, 200, 0.1)'  # Reduced opacity
 
     # Modify the color assignment for 'None' keyword
     cluster_df.loc[cluster_df['keyword_presence'] == 'None', 'keyword_presence'] = 'No Keyword Match'
@@ -67,20 +67,21 @@ def clusterByKeywords2(cluster_name, keywords, location, include_none):
 
     # Plot for Colored by Year
     fig_time_matched = px.scatter(matched_df, x='tsne_2D_x', y='tsne_2D_y', color='pub_year',
-                                  color_continuous_scale=color_scale_time, opacity=0.7,
+                                  color_continuous_scale=color_scale_time, opacity=1,  # Full opacity
                                   hover_data=['title'],
                                   range_color=[min_year, max_year])
 
     fig_time_unmatched = px.scatter(unmatched_df, x='tsne_2D_x', y='tsne_2D_y',
                                     color_discrete_sequence=[no_match_color],
-                                    opacity=0.7, hover_data=['title'])
+                                    opacity=0.3,  # Reduced opacity
+                                    hover_data=['title'])
 
     for trace in fig_time_matched['data']:
-        trace.marker.size = 5
+        trace.marker.size = 6  # Slightly larger
         fig.add_trace(trace, row=1, col=1)
 
     for trace in fig_time_unmatched['data']:
-        trace.marker.size = 5
+        trace.marker.size = 3  # Smaller
         trace.name = 'No Keyword Match'
         fig.add_trace(trace, row=1, col=1)
 
@@ -90,22 +91,22 @@ def clusterByKeywords2(cluster_name, keywords, location, include_none):
                                       y='tsne_2D_y', 
                                       color='keyword_presence',
                                       color_discrete_sequence=px.colors.qualitative.Alphabet,
-                                      opacity=0.7, 
+                                      opacity=1,  # Full opacity
                                       hover_data=['title'])
 
     fig_keywords_unmatched = px.scatter(unmatched_df,
                                         x='tsne_2D_x',
                                         y='tsne_2D_y',
                                         color_discrete_sequence=[no_match_color],
-                                        opacity=0.7,
+                                        opacity=0.3,  # Reduced opacity
                                         hover_data=['title'])
 
     for trace in fig_keywords_matched['data']:
-        trace.marker.size = 5
+        trace.marker.size = 6  # Slightly larger
         fig.add_trace(trace, row=2, col=1)
 
     for trace in fig_keywords_unmatched['data']:
-        trace.marker.size = 5
+        trace.marker.size = 3  # Smaller
         trace.name = 'No Keyword Match'
         fig.add_trace(trace, row=2, col=1)
 
@@ -361,5 +362,6 @@ elif page == "Embeddings Explorer":
     #             st.success("Email sent successfully")
     #     else:
     #         st.error("Please enter your findings before submitting")
+
 
 
