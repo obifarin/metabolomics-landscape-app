@@ -49,37 +49,64 @@ def clusterByKeywords2(cluster_name, keywords, location, include_none):
         (1, 'rgb(255, 0, 0)')   # Red for newest
     ]
 
+    # Define a faint, transparent gray color for 'No Keyword Match'
+    no_match_color = 'rgba(200, 200, 200, 0.3)'
+
+    # Modify the color assignment for 'None' keyword
+    cluster_df.loc[cluster_df['keyword_presence'] == 'None', 'keyword_presence'] = 'No Keyword Match'
+
+    # Create separate DataFrames for matched and unmatched entries
+    matched_df = cluster_df[cluster_df['keyword_presence'] != 'No Keyword Match']
+    unmatched_df = cluster_df[cluster_df['keyword_presence'] == 'No Keyword Match']
+
     fig = make_subplots(
         rows=2, cols=1, 
         subplot_titles=("Colored by Year", "Colored by Keyword Presence"),
         vertical_spacing=0.1
     )
 
-    # Set marker size directly in the scatter plot creation
-    fig_time = px.scatter(cluster_df, x='tsne_2D_x', y='tsne_2D_y', color='pub_year',
-                          color_continuous_scale=color_scale_time, opacity=0.7,
-                          hover_data=['title'],
-                          range_color=[min_year, max_year],  # Use dynamic range based on filtered subset
-                          size_max=3)  # This sets the maximum marker size
+    # Plot for Colored by Year
+    fig_time_matched = px.scatter(matched_df, x='tsne_2D_x', y='tsne_2D_y', color='pub_year',
+                                  color_continuous_scale=color_scale_time, opacity=0.7,
+                                  hover_data=['title'],
+                                  range_color=[min_year, max_year])
 
-    for trace in fig_time['data']:
-        trace.marker.size = 5  # Set a small fixed size for all markers
+    fig_time_unmatched = px.scatter(unmatched_df, x='tsne_2D_x', y='tsne_2D_y',
+                                    color_discrete_sequence=[no_match_color],
+                                    opacity=0.7, hover_data=['title'])
+
+    for trace in fig_time_matched['data']:
+        trace.marker.size = 5
         fig.add_trace(trace, row=1, col=1)
 
-    # Modify the color assignment for 'None' keyword
-    cluster_df.loc[cluster_df['keyword_presence'] == 'None', 'keyword_presence'] = 'No Keyword Match'
+    for trace in fig_time_unmatched['data']:
+        trace.marker.size = 5
+        trace.name = 'No Keyword Match'
+        fig.add_trace(trace, row=1, col=1)
 
-    fig_keywords = px.scatter(cluster_df, 
-                              x='tsne_2D_x', 
-                              y='tsne_2D_y', 
-                              color='keyword_presence',
-                              color_discrete_sequence=px.colors.qualitative.Alphabet[1:] + ['rgba(200, 200, 200, 0.3)'],
-                              opacity=0.7, 
-                              hover_data=['title'],
-                              size_max=3)  # This sets the maximum marker size
+    # Plot for Colored by Keyword Presence
+    fig_keywords_matched = px.scatter(matched_df, 
+                                      x='tsne_2D_x', 
+                                      y='tsne_2D_y', 
+                                      color='keyword_presence',
+                                      color_discrete_sequence=px.colors.qualitative.Alphabet,
+                                      opacity=0.7, 
+                                      hover_data=['title'])
 
-    for trace in fig_keywords['data']:
-        trace.marker.size = 5  # Set a small fixed size for all markers
+    fig_keywords_unmatched = px.scatter(unmatched_df,
+                                        x='tsne_2D_x',
+                                        y='tsne_2D_y',
+                                        color_discrete_sequence=[no_match_color],
+                                        opacity=0.7,
+                                        hover_data=['title'])
+
+    for trace in fig_keywords_matched['data']:
+        trace.marker.size = 5
+        fig.add_trace(trace, row=2, col=1)
+
+    for trace in fig_keywords_unmatched['data']:
+        trace.marker.size = 5
+        trace.name = 'No Keyword Match'
         fig.add_trace(trace, row=2, col=1)
 
     fig.update_layout(
@@ -334,4 +361,5 @@ elif page == "Embeddings Explorer":
     #             st.success("Email sent successfully")
     #     else:
     #         st.error("Please enter your findings before submitting")
+
 
