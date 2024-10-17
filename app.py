@@ -67,14 +67,14 @@ def clusterByKeywords2(cluster_name, keywords, location, include_none):
 
     # Plot for Colored by Year
     fig_time_matched = px.scatter(matched_df, x='tsne_2D_x', y='tsne_2D_y', color='pub_year',
-                                  color_continuous_scale=color_scale_time, opacity=1,  # Full opacity
-                                  hover_data=['title'],
+                                  color_continuous_scale=color_scale_time, opacity=1,
+                                  hover_data={'tsne_2D_x': False, 'tsne_2D_y': False, 'title': True, 'pub_year': True},
                                   range_color=[min_year, max_year])
 
     fig_time_unmatched = px.scatter(unmatched_df, x='tsne_2D_x', y='tsne_2D_y',
                                     color_discrete_sequence=[no_match_color],
-                                    opacity=0.3,  # Reduced opacity
-                                    hover_data=['title'])
+                                    opacity=0.3,
+                                    hover_data={'tsne_2D_x': False, 'tsne_2D_y': False, 'title': True})
 
     for trace in fig_time_matched['data']:
         trace.marker.size = 6  # Slightly larger
@@ -91,15 +91,15 @@ def clusterByKeywords2(cluster_name, keywords, location, include_none):
                                       y='tsne_2D_y', 
                                       color='keyword_presence',
                                       color_discrete_sequence=px.colors.qualitative.Alphabet,
-                                      opacity=1,  # Full opacity
-                                      hover_data=['title'])
+                                      opacity=1,
+                                      hover_data={'tsne_2D_x': False, 'tsne_2D_y': False, 'title': True, 'keyword_presence': True})
 
     fig_keywords_unmatched = px.scatter(unmatched_df,
                                         x='tsne_2D_x',
                                         y='tsne_2D_y',
                                         color_discrete_sequence=[no_match_color],
-                                        opacity=0.3,  # Reduced opacity
-                                        hover_data=['title'])
+                                        opacity=0.3,
+                                        hover_data={'tsne_2D_x': False, 'tsne_2D_y': False, 'title': True})
 
     for trace in fig_keywords_matched['data']:
         trace.marker.size = 6  # Slightly larger
@@ -362,6 +362,7 @@ elif page == "Embeddings Explorer":
     #             st.success("Email sent successfully")
     #     else:
     #         st.error("Please enter your findings before submitting")
+
 
 
 
