@@ -68,7 +68,7 @@ def clusterByKeywords2(cluster_name, keywords, location, include_none):
     # Plot for Colored by Year
     fig_time_matched = px.scatter(matched_df, x='tsne_2D_x', y='tsne_2D_y', color='pub_year',
                                   color_continuous_scale=color_scale_time, opacity=1,
-                                  hover_data={'tsne_2D_x': False, 'tsne_2D_y': False, 'title': True, 'pub_year': True},
+                                  hover_data={'tsne_2D_x': False, 'tsne_2D_y': False, 'title': True, 'pub_year': True, 'authors': True},
                                   range_color=[min_year, max_year])
 
     fig_time_unmatched = px.scatter(unmatched_df, x='tsne_2D_x', y='tsne_2D_y',
@@ -78,7 +78,7 @@ def clusterByKeywords2(cluster_name, keywords, location, include_none):
 
     # Customize hover text for matched entries in the time plot
     fig_time_matched.update_traces(
-        hovertemplate="Title: %{customdata[0]}<br>Publication Year: %{customdata[1]}<extra></extra>"
+        hovertemplate="Title: %{customdata[0]}<br>Authors: %{customdata[2]}<br>Publication Year: %{customdata[1]}<extra></extra>"
     )
 
     # Customize hover text for unmatched entries in the time plot
@@ -102,7 +102,7 @@ def clusterByKeywords2(cluster_name, keywords, location, include_none):
                                       color='keyword_presence',
                                       color_discrete_sequence=px.colors.qualitative.Alphabet,
                                       opacity=1,
-                                      hover_data={'tsne_2D_x': False, 'tsne_2D_y': False, 'title': True, 'keyword_presence': True})
+                                      hover_data={'tsne_2D_x': False, 'tsne_2D_y': False, 'title': True, 'keyword_presence': True, 'authors': True})
 
     fig_keywords_unmatched = px.scatter(unmatched_df,
                                         x='tsne_2D_x',
@@ -113,7 +113,7 @@ def clusterByKeywords2(cluster_name, keywords, location, include_none):
 
     # Customize hover text for matched entries in the keyword plot
     fig_keywords_matched.update_traces(
-        hovertemplate="Title: %{customdata[0]}<br>Keyword: %{customdata[1]}<extra></extra>"
+        hovertemplate="Title: %{customdata[0]}<br>Authors: %{customdata[2]}<br>Keyword: %{customdata[1]}<extra></extra>"
     )
 
     # Customize hover text for unmatched entries in the keyword plot
@@ -382,6 +382,7 @@ elif page == "Embeddings Explorer":
     #             st.success("Email sent successfully")
     #     else:
     #         st.error("Please enter your findings before submitting")
+
 
 
 
