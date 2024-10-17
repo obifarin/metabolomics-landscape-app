@@ -24,20 +24,20 @@ def load_data():
 
 df = load_data()
 
-def clusterByKeywords2(cluster_name, keywords, location, include_none):
+def clusterByKeywords2(cluster_name, keywords, location, only_matches=False):
     if cluster_name != 'All embeddings':
         cluster_df = df[df['predicted_category'] == cluster_name]
     else:
         cluster_df = df
 
-    cluster_df['keyword_presence'] = 'None'
+    cluster_df['keyword_presence'] = 'No Keyword Match'
 
     # Apply keyword filtering
     for keyword in keywords:
         cluster_df.loc[cluster_df[location].apply(lambda x: bool(re.search(keyword, x, re.IGNORECASE))), 'keyword_presence'] = keyword
 
-    if not include_none:
-        cluster_df = cluster_df[cluster_df['keyword_presence'] != 'None']
+    if only_matches:
+        cluster_df = cluster_df[cluster_df['keyword_presence'] != 'No Keyword Match']
 
     # Recalculate the min and max years from the filtered dataset
     min_year = cluster_df['pub_year'].min()
@@ -312,11 +312,13 @@ elif page == "Embeddings Explorer":
     cluster_name = st.sidebar.selectbox("Select Research Cluster", options=["All embeddings"] + list(df['predicted_category'].unique()))
     keywords = st.sidebar.text_input("Enter Keywords (comma-separated)").split(',')
     location = st.sidebar.selectbox("Select Location to Search Keywords", options=["abstract", "title"])
-    include_none = st.sidebar.checkbox("Include Records Without Keywords")
+
+    # Add a checkbox for including only papers with keyword matches
+    only_matches = st.sidebar.checkbox("Show only papers with keyword matches", value=False)
 
     if st.sidebar.button("Generate Plot"):
         if keywords and location:
-            fig = clusterByKeywords2(cluster_name, keywords, location, include_none)
+            fig = clusterByKeywords2(cluster_name, keywords, location, only_matches)
             st.plotly_chart(fig)
         else:
             st.error("Please provide all inputs")
@@ -382,6 +384,8 @@ elif page == "Embeddings Explorer":
     #             st.success("Email sent successfully")
     #     else:
     #         st.error("Please enter your findings before submitting")
+
+
 
 
 
