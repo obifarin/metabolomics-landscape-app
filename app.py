@@ -76,6 +76,16 @@ def clusterByKeywords2(cluster_name, keywords, location, include_none):
                                     opacity=0.3,
                                     hover_data={'tsne_2D_x': False, 'tsne_2D_y': False, 'title': True})
 
+    # Customize hover text for matched entries in the time plot
+    fig_time_matched.update_traces(
+        hovertemplate="Title: %{customdata[0]}<br>Publication Year: %{customdata[1]}<extra></extra>"
+    )
+
+    # Customize hover text for unmatched entries in the time plot
+    fig_time_unmatched.update_traces(
+        hovertemplate="Title: %{customdata[0]}<extra></extra>"
+    )
+
     for trace in fig_time_matched['data']:
         trace.marker.size = 6  # Slightly larger
         fig.add_trace(trace, row=1, col=1)
@@ -100,6 +110,16 @@ def clusterByKeywords2(cluster_name, keywords, location, include_none):
                                         color_discrete_sequence=[no_match_color],
                                         opacity=0.3,
                                         hover_data={'tsne_2D_x': False, 'tsne_2D_y': False, 'title': True})
+
+    # Customize hover text for matched entries in the keyword plot
+    fig_keywords_matched.update_traces(
+        hovertemplate="Title: %{customdata[0]}<br>Keyword: %{customdata[1]}<extra></extra>"
+    )
+
+    # Customize hover text for unmatched entries in the keyword plot
+    fig_keywords_unmatched.update_traces(
+        hovertemplate="Title: %{customdata[0]}<extra></extra>"
+    )
 
     for trace in fig_keywords_matched['data']:
         trace.marker.size = 6  # Slightly larger
@@ -362,6 +382,7 @@ elif page == "Embeddings Explorer":
     #             st.success("Email sent successfully")
     #     else:
     #         st.error("Please enter your findings before submitting")
+
 
 
 
