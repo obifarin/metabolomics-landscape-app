@@ -209,25 +209,25 @@ def highlightAuthor(author_name, show_other):
     # If show_other is True, add scatter plot for non-highlighted points
     if show_other:
         other_df = df[~df['highlight']]  # DataFrame of non-highlighted points
-        fig.add_trace(go.Scatter(
+        fig.add_trace(go.Scattergl(  # Use Scattergl for better performance
             x=other_df['tsne_2D_x'], 
             y=other_df['tsne_2D_y'],
             mode='markers',
-            marker=dict(color='rgba(160, 160, 160, 0.5)', size=3),  # Light gray, small, and transparent
+            marker=dict(color='rgba(160, 160, 160, 0.5)', size=3),  # Smaller size, no border
             name='Other',
             hoverinfo='none'  # No hover information for other points
         ))
 
     # Add scatter plot for highlighted points
     highlight_df = df[df['highlight']]  # DataFrame of highlighted points
-    fig.add_trace(go.Scatter(
+    fig.add_trace(go.Scattergl(  # Use Scattergl for better performance
         x=highlight_df['tsne_2D_x'], 
         y=highlight_df['tsne_2D_y'],
         mode='markers',
         marker=dict(
             color='rgb(0, 0, 225)',  # Blue
-            size=10,  # Larger size for visibility
-            line=dict(width=2, color='rgb(0, 0, 100)')  # Darker blue border
+            size=10,  # Keep original size
+            line=dict(width=2, color='rgb(0, 0, 100)')  # Keep original border
         ),
         name=author_name,
         # Create hover text with title and journal information
@@ -255,7 +255,7 @@ def highlightAuthor(author_name, show_other):
     fig.update_xaxes(showline=True, linewidth=1, linecolor='lightgray', mirror=True)
     fig.update_yaxes(showline=True, linewidth=1, linecolor='lightgray', mirror=True)
 
-    return fig  # Return the constructed figure object
+    return fig
 
 # Comment out the email function for now
 # def send_email(subject, body, to_email):
@@ -384,6 +384,7 @@ elif page == "Embeddings Explorer":
     #             st.success("Email sent successfully")
     #     else:
     #         st.error("Please enter your findings before submitting")
+
 
 
 
