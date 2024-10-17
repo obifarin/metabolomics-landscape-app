@@ -168,7 +168,7 @@ def clusterByKeywords2(cluster_name, keywords, location, only_matches=False):
     return fig
 
 
-def highlightAuthor(author_name, show_only_author=False):
+def highlightAuthor(author_name, show_other):
     # Split the author_name into parts based on whitespace
     author_parts = author_name.split()
     
@@ -206,30 +206,31 @@ def highlightAuthor(author_name, show_only_author=False):
     # Create a new figure
     fig = go.Figure()
 
-    # Add scatter plot for non-highlighted points (other embeddings)
-    if not show_only_author:
+    # If show_other is True, add scatter plot for non-highlighted points
+    if show_other:
         other_df = df[~df['highlight']]  # DataFrame of non-highlighted points
-        fig.add_trace(go.Scattergl(
+        fig.add_trace(go.Scattergl(  # Use Scattergl for better performance
             x=other_df['tsne_2D_x'], 
             y=other_df['tsne_2D_y'],
             mode='markers',
-            marker=dict(color='rgba(160, 160, 160, 0.5)', size=3),
+            marker=dict(color='rgba(160, 160, 160, 0.5)', size=3),  # Smaller size, no border
             name='Other',
-            hoverinfo='none'
+            hoverinfo='none'  # No hover information for other points
         ))
 
     # Add scatter plot for highlighted points
     highlight_df = df[df['highlight']]  # DataFrame of highlighted points
-    fig.add_trace(go.Scattergl(
+    fig.add_trace(go.Scattergl(  # Use Scattergl for better performance
         x=highlight_df['tsne_2D_x'], 
         y=highlight_df['tsne_2D_y'],
         mode='markers',
         marker=dict(
             color='rgb(0, 0, 225)',  # Blue
-            size=10,
-            line=dict(width=2, color='rgb(0, 0, 100)')
+            size=10,  # Keep original size
+            line=dict(width=2, color='rgb(0, 0, 100)')  # Keep original border
         ),
         name=author_name,
+        # Create hover text with title and journal information
         text = highlight_df.apply(lambda row: f"Title: {row['title']}<br>Journal: {row['journal_title']}<br>Date of Publication: {row['pub_year']}", axis=1),
         hoverinfo='text'
     ))
@@ -324,43 +325,52 @@ elif page == "Embeddings Explorer":
 
     st.header("Search by :blue[_Author_] 🧑‍🔬")
     with st.expander("Author Search Implementation"):
+        
         st.write("""
         The author search identifies and highlights papers authored by a specified individual on a t-SNE scatter plot. 
                  It extracts the author's last name and first initial, then checks each paper's list of authors for matches. 
                  Papers by the specified author are flagged and assigned a distinct color (blue), while other papers remain gray. 
-                 The plot displays larger markers for highlighted papers, with hover text showing the paper's title and journal. 
-                 Optional display of only the highlighted points can be toggled, and the plot is customized for clarity and aesthetic appeal. 
+                 The plot displays larger markers for highlighted papers, with hover text showing the paper’s title and journal. 
+                 Optional display of non-highlighted points can be toggled, and the plot is customized for clarity and aesthetic appeal. 
                  The function returns the final visual representation.""")
 
     author_name = st.text_input("Enter First and Last Name")
 
-    show_only_author = st.checkbox("Show only papers by author", value=False)
+    show_other = st.checkbox("Show Other Embeddings")
+
+    # Create two buttons next to each other with minimal space
+    col1, col2, col3 = st.columns([.25,.25,.25])
 
     if st.button("Search"):
         if author_name:
-            fig = highlightAuthor(author_name, show_only_author)
+            fig = highlightAuthor(author_name, show_other)
             st.plotly_chart(fig)
         else:
             st.error("Please enter an author name")
 
-    # Example buttons
-    st.subheader("Example Authors")
-    col1, col2, col3 = st.columns(3)
 
     with col1:
-        if st.button("Jeremy Nicholson"):
-            fig = highlightAuthor("Jeremy Nicholson", show_only_author)
-            st.plotly_chart(fig)
+        button1 = st.button("Jeremy Nicholson")
+            
 
     with col2:
-        if st.button("Oliver Fiehn"):
-            fig = highlightAuthor("Oliver Fiehn", show_only_author)
-            st.plotly_chart(fig)
+        button2 = st.button("Oliver Fiehn")
 
     with col3:
-        if st.button("Alisdair Fernie"):
-            fig = highlightAuthor("Alisdair Fernie", show_only_author)
-            st.plotly_chart(fig)
+        button3 = st.button("Alisdair Fernie")
+            
+        
+    if button1:
+        fig = highlightAuthor("Jeremy Nicholson", show_other)
+        st.plotly_chart(fig)
+
+    if button2:
+        fig = highlightAuthor("Oliver Fiehn", show_other)
+        st.plotly_chart(fig)
+
+    if button3:
+        fig = highlightAuthor("Alisdair Fernie", show_other)
+        st.plotly_chart(fig)
 
 
     st.header("Share Your :blue[_Findings_] 🔍")
@@ -374,8 +384,6 @@ elif page == "Embeddings Explorer":
     #             st.success("Email sent successfully")
     #     else:
     #         st.error("Please enter your findings before submitting")
-
-
 
 
 
