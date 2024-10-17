@@ -324,13 +324,12 @@ elif page == "Embeddings Explorer":
 
     st.header("Search by :blue[_Author_] 🧑‍🔬")
     with st.expander("Author Search Implementation"):
-        
         st.write("""
         The author search identifies and highlights papers authored by a specified individual on a t-SNE scatter plot. 
                  It extracts the author's last name and first initial, then checks each paper's list of authors for matches. 
                  Papers by the specified author are flagged and assigned a distinct color (blue), while other papers remain gray. 
-                 The plot displays larger markers for highlighted papers, with hover text showing the paper’s title and journal. 
-                 Optional display of non-highlighted points can be toggled, and the plot is customized for clarity and aesthetic appeal. 
+                 The plot displays larger markers for highlighted papers, with hover text showing the paper's title and journal. 
+                 Optional display of only the highlighted points can be toggled, and the plot is customized for clarity and aesthetic appeal. 
                  The function returns the final visual representation.""")
 
     author_name = st.text_input("Enter First and Last Name")
@@ -344,18 +343,24 @@ elif page == "Embeddings Explorer":
         else:
             st.error("Please enter an author name")
 
-    # For the example buttons:
-    if button1:
-        fig = highlightAuthor("Jeremy Nicholson", show_only_author)
-        st.plotly_chart(fig)
+    # Example buttons
+    st.subheader("Example Authors")
+    col1, col2, col3 = st.columns(3)
 
-    if button2:
-        fig = highlightAuthor("Oliver Fiehn", show_only_author)
-        st.plotly_chart(fig)
+    with col1:
+        if st.button("Jeremy Nicholson"):
+            fig = highlightAuthor("Jeremy Nicholson", show_only_author)
+            st.plotly_chart(fig)
 
-    if button3:
-        fig = highlightAuthor("Alisdair Fernie", show_only_author)
-        st.plotly_chart(fig)
+    with col2:
+        if st.button("Oliver Fiehn"):
+            fig = highlightAuthor("Oliver Fiehn", show_only_author)
+            st.plotly_chart(fig)
+
+    with col3:
+        if st.button("Alisdair Fernie"):
+            fig = highlightAuthor("Alisdair Fernie", show_only_author)
+            st.plotly_chart(fig)
 
 
     st.header("Share Your :blue[_Findings_] 🔍")
@@ -369,6 +374,7 @@ elif page == "Embeddings Explorer":
     #             st.success("Email sent successfully")
     #     else:
     #         st.error("Please enter your findings before submitting")
+
 
 
 
