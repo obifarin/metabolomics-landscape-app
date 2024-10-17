@@ -298,10 +298,10 @@ if page == "Home":
              
     """)
 
-    st.write(""" Watch a demo of how to use the app below :video_camera:""")
+    st.subheader(""" Demo of App :video_camera:""")
     st.video("https://www.youtube.com/watch?v=nsfKd4b-H6s")
 
-    st.write(""" A 10 minute video that summarizes the study and some of its results can be found here :movie_camera:""")
+    st.subheader(""" 10-minute Study Summary :movie_camera:""")
     st.video("https://www.youtube.com/watch?v=eHrCx2LhdCk")
 elif page == "Embeddings Explorer":
     st.header("Embeddings :blue[_Explorer_] 🌐")
