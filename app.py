@@ -87,7 +87,7 @@ def clusterByKeywords2(cluster_name, keywords, location, only_matches=False):
     )
 
     for trace in fig_time_matched['data']:
-        trace.marker.size = 6  # Slightly larger
+        trace.marker.size = 5  # Slightly larger default size=6
         fig.add_trace(trace, row=1, col=1)
 
     for trace in fig_time_unmatched['data']:
@@ -122,7 +122,7 @@ def clusterByKeywords2(cluster_name, keywords, location, only_matches=False):
     )
 
     for trace in fig_keywords_matched['data']:
-        trace.marker.size = 6  # Slightly larger
+        trace.marker.size = 5  # Slightly larger default size=6
         fig.add_trace(trace, row=2, col=1)
 
     for trace in fig_keywords_unmatched['data']:
@@ -257,34 +257,130 @@ def highlightAuthor(author_name, show_other):
 
     return fig
 
-# Comment out the email function for now
-# def send_email(subject, body, to_email):
-#     from_email = "adityasimhadri1@gmail.com"  # Replace with your email
-#     from_password = "dixy zovy anvu qufz"  # Replace with your app password
 
-#     msg = MIMEMultipart()
-#     msg['From'] = from_email
-#     msg['To'] = to_email
-#     msg['Subject'] = subject
+def analyze_keyword_trends(keywords, location):
+    """
+    Analyze and visualize the frequency of keywords over time.
+    
+    Parameters:
+    - keywords: List of keywords to track
+    - location: Where to search for keywords ('abstract' or 'title')
+    
+    Returns:
+    - Plotly figure showing keyword trends over time
+    """
+    # Filter out empty keywords
+    keywords = [k.strip() for k in keywords if k.strip()]
+    
+    if not keywords:
+        return None
+    
+    # Get all unique years in the dataset, excluding 2024
+    all_years = sorted([year for year in df['pub_year'].unique() if year != 2024])
+    
+    # Calculate total papers per year (excluding 2024)
+    year_counts = df[df['pub_year'] != 2024]['pub_year'].value_counts().reindex(all_years, fill_value=0)
+    
+    # Create figure
+    fig = go.Figure()
+    
+    # Process each keyword
+    for keyword in keywords:
+        pattern = re.compile(keyword, re.IGNORECASE)
+        
+        # Initialize a counts dictionary with zeros for all years
+        keyword_counts = {year: 0 for year in all_years}
+        
+        # Count papers containing the keyword for each year
+        for year in all_years:
+            year_df = df[df['pub_year'] == year]
+            if not year_df.empty:
+                # Count matching papers
+                matches = year_df[location].apply(
+                    lambda x: bool(pattern.search(str(x))) if pd.notna(x) else False
+                ).sum()
+                
+                # Calculate percentage if there are papers this year
+                if year_counts[year] > 0:
+                    keyword_counts[year] = (matches / year_counts[year]) * 100
+        
+        # Create x and y lists ensuring all years are included
+        x_values = all_years
+        y_values = [keyword_counts[year] for year in all_years]
+        
+        # Add trace with explicit line connection
+        fig.add_trace(go.Scatter(
+            x=x_values,
+            y=y_values,
+            mode='lines+markers',
+            name=keyword,
+            line=dict(
+                shape='linear',  # Linear interpolation between points
+                dash='solid',    # Solid line
+                width=2          # Line width
+            ),
+            marker=dict(
+                size=8,          # Larger markers to highlight data points
+                symbol='circle'  # Circle markers
+            ),
+            connectgaps=True,    # Important: Connect gaps across zero/null values
+            hovertemplate='Year: %{x}<br>Percentage: %{y:.2f}%<extra></extra>'
+        ))
+    
+    # Update layout
+    fig.update_layout(
+        title="Keyword Trends Over Time",
+        xaxis_title="Year",
+        yaxis_title="Percentage of Papers (%)",
+        plot_bgcolor='white',
+        height=500,
+        width=900,
+        title_font=dict(size=24, family='Arial, sans-serif', color='#333333'),
+        font=dict(size=14, family='Arial, sans-serif', color='#333333'),
+        margin=dict(l=50, r=50, t=80, b=50),
+        legend=dict(
+            title=dict(text='Keywords'),
+            orientation="h",
+            yanchor="bottom",
+            y=-0.2,
+            xanchor="center",
+            x=0.5,
+            bgcolor="rgba(255,255,255,0.8)",
+            bordercolor="lightgray",
+            borderwidth=1
+        )
+    )
+    
+    # Add grid lines for better readability
+    #fig.update_xaxes(showgrid=True, gridwidth=1, gridcolor='lightgray')
+    #fig.update_yaxes(showgrid=True, gridwidth=1, gridcolor='lightgray')
+    # Show fewer x-axis labels and reduce grid line thickness
+    selected_years = all_years[::4]  # For example, every 5th year
+    fig.update_xaxes(
+        type='category',
+        tickmode='array',
+        tickvals=selected_years,
+        ticktext=[str(year) for year in selected_years],
+        showgrid=True,
+        gridwidth=0.1,  # Thinner grid lines
+        gridcolor='lightgray'
+    )
+    fig.update_yaxes(
+        showgrid=True,
+        gridwidth=0.1,  # Thinner grid lines
+        gridcolor='lightgray'
+    )
+    
+    return fig
 
-#     msg.attach(MIMEText(body, 'plain'))
-
-#     try:
-#         server = smtplib.SMTP('smtp.gmail.com', 587)
-#         server.starttls()
-#         server.login(from_email, from_password)
-#         text = msg.as_string()
-#         server.sendmail(from_email, to_email, text)
-#         server.quit()
-#         return True
-#     except Exception as e:
-#         st.error(f"Error sending email: {e}")
-#         return False
-
-st.title("Landscape of :red[_Metabolomics_] Research 📄")
+st.title("A _Map_ of :red[_Metabolomics_] Research 📄")
 st.write("**_Aditya Simhadri_** and [**_Olatomiwa O. Bifarin_**](https://www.linkedin.com/in/obifarin/), [Fernández Lab](https://sites.gatech.edu/fernandez/), Georgia Tech")
 
-page = st.sidebar.selectbox("Choose a page", ["Home", "Embeddings Explorer"])
+# Create a navigation menu with more options
+page = st.sidebar.selectbox(
+    "Choose a page", 
+    ["Home", "Embeddings Explorer", "Keyword Trend Analysis", "Author Search"]
+)
 
 if page == "Home":
     st.subheader("About the Study")
@@ -301,81 +397,171 @@ if page == "Home":
 
     st.subheader(""" 10-minute Study Summary :movie_camera:""")
     st.video("https://www.youtube.com/watch?v=eHrCx2LhdCk")
+
 elif page == "Embeddings Explorer":
     st.header("Embeddings :blue[_Explorer_] 🌐")
     with st.expander("How to use"):
+        st.write("""
+        This tool allows you to explore research papers in the metabolomics field using t-SNE visualizations.
         
-        st.write("""On the sidebar, input the desired research cluster and keywords, and choose whether 
-                 to search in abstracts or titles. Click 'Generate Plot' to visualize t-SNE embeddings 
-                 colored by publication year and keyword presence. **Note**: If an embedding matches multiple 
-                 keywords in the document, the value or color corresponding to the last keyword entered will be shown.""")
+        **How to use:**
+        1. Select a research cluster from the dropdown menu in the sidebar (or choose "All embeddings")
+        2. Enter keywords of interest, separated by commas
+        3. Choose whether to search in paper abstracts or titles
+        4. Optionally check "Show only papers with keyword matches" to filter the visualization
+        5. Click "Generate Plot" to create the visualization
         
-
-    st.sidebar.header("Parameters")
-    cluster_name = st.sidebar.selectbox("Select Research Cluster", options=["All embeddings"] + list(df['predicted_category'].unique()))
-    keywords = st.sidebar.text_input("Enter Keywords (comma-separated)").split(',')
-    location = st.sidebar.selectbox("Select Location to Search Keywords", options=["abstract", "title"])
-
-    # Add a checkbox for including only papers with keyword matches
-    only_matches = st.sidebar.checkbox("Show only papers with keyword matches", value=False)
-
-    if st.sidebar.button("Generate Plot"):
+        The visualization displays two plots:
+        - **Top plot**: Papers colored by publication year (blue → yellow → red from oldest to newest)
+        - **Bottom plot**: Papers colored by keyword matches
+        
+        **Note**: If a paper matches multiple keywords, it will be colored according to the last matching keyword in your list.
+        
+        Hover over any point to see details about the corresponding paper.
+        """)
+    
+    # Parameters section - moved from sidebar to main page
+    st.subheader("Parameters")
+    
+    # Create two columns for the parameters
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        cluster_name = st.selectbox("Select Research Cluster", 
+                                   options=["All embeddings"] + list(df['predicted_category'].unique()))
+        location = st.selectbox("Select Location to Search Keywords", 
+                               options=["abstract", "title"])
+    
+    with col2:
+        keywords = st.text_input("Enter Keywords (comma-separated)").split(',')
+        only_matches = st.checkbox("Show only papers with keyword matches", value=False)
+    
+    # Generate plot button
+    if st.button("Generate Plot", type="primary"):
         if keywords and location:
             fig = clusterByKeywords2(cluster_name, keywords, location, only_matches)
             st.plotly_chart(fig)
         else:
             st.error("Please provide all inputs")
 
-    st.header("Search by :blue[_Author_] 🧑‍🔬")
-    with st.expander("Author Search Implementation"):
-        
+elif page == "Keyword Trend Analysis":
+    # Keyword Trend Analysis page
+    st.header("Keyword :blue[_Trend Analysis_] 📈")
+    with st.expander("How to use"):
         st.write("""
-        The author search identifies and highlights papers authored by a specified individual on a t-SNE scatter plot. 
-                 It extracts the author's last name and first initial, then checks each paper's list of authors for matches. 
-                 Papers by the specified author are flagged and assigned a distinct color (blue), while other papers remain gray. 
-                 The plot displays larger markers for highlighted papers, with hover text showing the paper’s title and journal. 
-                 Optional display of non-highlighted points can be toggled, and the plot is customized for clarity and aesthetic appeal. 
-                 The function returns the final visual representation.""")
+        This feature tracks how frequently specific keywords appear in metabolomics literature over time.
+        
+        **How to use:**
+        1. Enter one or more keywords of interest, separated by commas
+        2. Select whether to search in paper abstracts or titles
+        3. Click "Generate Trend Analysis" to create the visualization
+        
+        The graph shows the percentage of papers mentioning each keyword per year, allowing you to:
+        - Identify emerging research trends
+        - Track the rise or decline of specific topics
+        - Compare interest in different concepts over time
+        
+        Hover over any point on the graph to see the exact percentage for that year.
+        """)
+    
+    trend_keywords = st.text_input("Enter Keywords for Trend Analysis (comma-separated)").split(',')
+    trend_location = st.selectbox("Select Location for Trend Analysis", options=["abstract", "title"])
+    
+    if st.button("Generate Trend Analysis"):
+        if trend_keywords and any(k.strip() for k in trend_keywords):
+            trend_fig = analyze_keyword_trends(trend_keywords, trend_location)
+            st.plotly_chart(trend_fig)
+        else:
+            st.error("Please enter at least one keyword for trend analysis")
 
-    author_name = st.text_input("Enter First and Last Name")
+elif page == "Author Search":
+    # Author Search page
+    st.header("Search by :blue[_Author_] 🧑‍🔬")
+    with st.expander("How to use Author Search"):
+        st.write("""
+        This tool allows you to visualize research papers by specific authors within the metabolomics landscape.
+        
+        **How it works:**
+        1. Enter an author's name (first and last name) in the text field
+        2. Optionally check "Show Other Embeddings" to display papers by other authors in gray
+        3. Click "Search" to generate the visualization
+         
+        The visualization displays papers authored by the specified researcher as larger blue dots, with hover information 
+        showing the paper's title, journal, and publication year. The search algorithm matches the author's last name and 
+        first initial against the author lists in our database.
+        
+        You can also try one of the pre-defined notable researchers in metabolomics by clicking their name buttons below the search field.
+        """)
 
-    show_other = st.checkbox("Show Other Embeddings")
+    # Initialize session state variables if they don't exist
+    if 'author_search_state' not in st.session_state:
+        st.session_state.author_search_state = {
+            'author_name': "",
+            'show_other': False,
+            'search_clicked': False,
+            'current_fig': None
+        }
+    
+    # Create form to prevent auto-rerun on every input change
+    with st.form(key='author_search_form'):
+        author_input = st.text_input("Enter First and Last Name", 
+                                    value=st.session_state.author_search_state['author_name'])
+        show_other = st.checkbox("Show Other Embeddings", 
+                                value=st.session_state.author_search_state['show_other'])
+        
+        # Create columns for buttons
+        col1, col2, col3, col4 = st.columns([1, .35, .25, .25])
+        
+        with col1:
+            search_button = st.form_submit_button("Search")
+        
+        with col2:
+            nicholson_button = st.form_submit_button("Jeremy Nicholson")
+            
+        with col3:
+            fiehn_button = st.form_submit_button("Oliver Fiehn")
 
-    # Create two buttons next to each other with minimal space
-    col1, col2, col3 = st.columns([.25,.25,.25])
-
-    if st.button("Search"):
-        if author_name:
-            fig = highlightAuthor(author_name, show_other)
-            st.plotly_chart(fig)
+        with col4:
+            fernie_button = st.form_submit_button("Alisdair Fernie")
+    
+    # Handle form submission
+    if search_button:
+        if author_input:
+            st.session_state.author_search_state['author_name'] = author_input
+            st.session_state.author_search_state['show_other'] = show_other
+            st.session_state.author_search_state['search_clicked'] = True
+            fig = highlightAuthor(author_input, show_other)
+            st.session_state.author_search_state['current_fig'] = fig
         else:
             st.error("Please enter an author name")
-
-
-    with col1:
-        button1 = st.button("Jeremy Nicholson")
-            
-
-    with col2:
-        button2 = st.button("Oliver Fiehn")
-
-    with col3:
-        button3 = st.button("Alisdair Fernie")
-            
-        
-    if button1:
+    
+    elif nicholson_button:
+        st.session_state.author_search_state['author_name'] = "Jeremy Nicholson"
+        st.session_state.author_search_state['show_other'] = show_other
+        st.session_state.author_search_state['search_clicked'] = True
         fig = highlightAuthor("Jeremy Nicholson", show_other)
-        st.plotly_chart(fig)
-
-    if button2:
+        st.session_state.author_search_state['current_fig'] = fig
+        
+    elif fiehn_button:
+        st.session_state.author_search_state['author_name'] = "Oliver Fiehn"
+        st.session_state.author_search_state['show_other'] = show_other
+        st.session_state.author_search_state['search_clicked'] = True
         fig = highlightAuthor("Oliver Fiehn", show_other)
-        st.plotly_chart(fig)
-
-    if button3:
+        st.session_state.author_search_state['current_fig'] = fig
+        
+    elif fernie_button:
+        st.session_state.author_search_state['author_name'] = "Alisdair Fernie"
+        st.session_state.author_search_state['show_other'] = show_other
+        st.session_state.author_search_state['search_clicked'] = True
         fig = highlightAuthor("Alisdair Fernie", show_other)
-        st.plotly_chart(fig)
+        st.session_state.author_search_state['current_fig'] = fig
+    
+    # Display the current figure if it exists
+    if st.session_state.author_search_state['search_clicked'] and st.session_state.author_search_state['current_fig'] is not None:
+        st.plotly_chart(st.session_state.author_search_state['current_fig'])
 
-
+# Add the "Share Your Findings" section to all pages except Home
+if page != "Home":
     st.header("Share Your :blue[_Findings_] 🔍")
     st.write("Kindly share your findings to this email: obifarin3@gatech.edu")
     # findings = st.text_area("Enter your findings here")
