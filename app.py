@@ -565,7 +565,7 @@ elif page == "Author Search":
 # Add the "Share Your Findings" section to all pages except Home
 if page != "Home":
     st.subheader(":blue[_Feedback?_] 🔍")
-    st.write("Share your feeback: [**_Olatomiwa O. Bifarin_**](https://www.linkedin.com/in/obifarin/)")
+    st.write("Share your [feeback](https://www.linkedin.com/in/obifarin/)")
     # findings = st.text_area("Enter your findings here")
 
     # if st.button("Submit Findings"):
