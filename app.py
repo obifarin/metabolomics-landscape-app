@@ -391,7 +391,8 @@ if page == "Home":
              model (PubMedBERT), which converts scientific abstracts into numerical 
              representations. These embeddings are then visualized using t-SNE plots. 
              The app also allows users to search for specific keywords and authors 
-             within the dataset, and analyze keyword trends over time. 
+             within the dataset, and analyze keyword trends over time. Data was collected
+             from PubMed, data range: 1998-early 2024.
     """)
 
     st.subheader(""" Demo of App :video_camera:""")
@@ -565,7 +566,7 @@ elif page == "Author Search":
 # Add the "Share Your Findings" section to all pages except Home
 if page != "Home":
     st.subheader(":blue[_Feedback?_] 🔍")
-    st.write("Share your [feeback](https://www.linkedin.com/in/obifarin/)")
+    st.write("Share your [feedback](https://www.linkedin.com/in/obifarin/)")
     # findings = st.text_area("Enter your findings here")
 
     # if st.button("Submit Findings"):
