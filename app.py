@@ -32,9 +32,32 @@ def clusterByKeywords2(cluster_name, keywords, location, only_matches=False):
 
     cluster_df['keyword_presence'] = 'No Keyword Match'
 
-    # Apply keyword filtering
-    for keyword in keywords:
-        cluster_df.loc[cluster_df[location].apply(lambda x: bool(re.search(keyword, x, re.IGNORECASE))), 'keyword_presence'] = keyword
+    # Apply keyword filtering with OR functionality
+    for keyword_entry in keywords:
+        keyword_entry = keyword_entry.strip()
+        if not keyword_entry:
+            continue
+            
+        # Check if this is an OR group (contains | character)
+        if '|' in keyword_entry:
+            # Split into individual keywords for the OR relationship
+            or_keywords = [k.strip() for k in keyword_entry.split('|') if k.strip()]
+            display_name = f"{' | '.join(or_keywords)}"  # Use a readable name
+            
+            # Check if any of the OR keywords match
+            def matches_any_keyword(text):
+                if pd.isna(text):
+                    return False
+                # Check each keyword in the OR group
+                return any(bool(re.search(k, str(text), re.IGNORECASE)) for k in or_keywords)
+                
+            # Apply the OR matching function
+            matches_mask = cluster_df[location].apply(matches_any_keyword)
+            cluster_df.loc[matches_mask, 'keyword_presence'] = display_name
+        else:
+            # Original single keyword logic
+            cluster_df.loc[cluster_df[location].apply(lambda x: bool(re.search(keyword_entry, x, re.IGNORECASE))), 
+                          'keyword_presence'] = keyword_entry
 
     if only_matches:
         cluster_df = cluster_df[cluster_df['keyword_presence'] != 'No Keyword Match']
@@ -263,7 +286,7 @@ def analyze_keyword_trends(keywords, location):
     Analyze and visualize the frequency of keywords over time.
     
     Parameters:
-    - keywords: List of keywords to track
+    - keywords: List of keywords to track (can include OR relationships using | character)
     - location: Where to search for keywords ('abstract' or 'title')
     
     Returns:
@@ -284,21 +307,37 @@ def analyze_keyword_trends(keywords, location):
     # Create figure
     fig = go.Figure()
     
-    # Process each keyword
-    for keyword in keywords:
-        pattern = re.compile(keyword, re.IGNORECASE)
+    # Process each keyword or keyword group
+    for keyword_entry in keywords:
+        # Check if this is an OR group (contains | character)
+        if '|' in keyword_entry:
+            # Split into individual keywords for the OR relationship
+            or_keywords = [k.strip() for k in keyword_entry.split('|') if k.strip()]
+            display_name = f"{' | '.join(or_keywords)}"  # Use a readable name for the legend
+            
+            # Create regex patterns for each keyword in the OR group
+            patterns = [re.compile(k, re.IGNORECASE) for k in or_keywords]
+        else:
+            # Single keyword case (existing functionality)
+            display_name = keyword_entry
+            patterns = [re.compile(keyword_entry, re.IGNORECASE)]
         
         # Initialize a counts dictionary with zeros for all years
         keyword_counts = {year: 0 for year in all_years}
         
-        # Count papers containing the keyword for each year
+        # Count papers containing the keyword(s) for each year
         for year in all_years:
             year_df = df[df['pub_year'] == year]
             if not year_df.empty:
+                # Count papers matching ANY of the patterns in the OR group
+                def matches_any_pattern(text):
+                    if pd.isna(text):
+                        return False
+                    # Return True if any pattern matches
+                    return any(p.search(str(text)) for p in patterns)
+                
                 # Count matching papers
-                matches = year_df[location].apply(
-                    lambda x: bool(pattern.search(str(x))) if pd.notna(x) else False
-                ).sum()
+                matches = year_df[location].apply(matches_any_pattern).sum()
                 
                 # Calculate percentage if there are papers this year
                 if year_counts[year] > 0:
@@ -313,7 +352,7 @@ def analyze_keyword_trends(keywords, location):
             x=x_values,
             y=y_values,
             mode='lines+markers',
-            name=keyword,
+            name=display_name,
             line=dict(
                 shape='linear',  # Linear interpolation between points
                 dash='solid',    # Solid line
@@ -333,27 +372,24 @@ def analyze_keyword_trends(keywords, location):
         xaxis_title="Year",
         yaxis_title="Percentage of Papers (%)",
         plot_bgcolor='white',
-        height=500,
+        height=500,  # Increase height to accommodate legend
         width=900,
         title_font=dict(size=24, family='Arial, sans-serif', color='#333333'),
         font=dict(size=14, family='Arial, sans-serif', color='#333333'),
         margin=dict(l=50, r=50, t=80, b=50),
         legend=dict(
             title=dict(text='Keywords'),
-            orientation="h",
-            yanchor="bottom",
-            y=-0.2,
-            xanchor="center",
-            x=0.5,
+            orientation="h",     # Horizontal orientation
+            yanchor="bottom",   # Anchor point at bottom
+            y=-0.5,            # Move legend down further (more negative value = lower position)
+            xanchor="center",   # Center horizontally
+            x=0.5,             # Center position
             bgcolor="rgba(255,255,255,0.8)",
             bordercolor="lightgray",
             borderwidth=1
         )
     )
     
-    # Add grid lines for better readability
-    #fig.update_xaxes(showgrid=True, gridwidth=1, gridcolor='lightgray')
-    #fig.update_yaxes(showgrid=True, gridwidth=1, gridcolor='lightgray')
     # Show fewer x-axis labels and reduce grid line thickness
     selected_years = all_years[::4]  # For example, every 5th year
     fig.update_xaxes(
@@ -410,9 +446,15 @@ elif page == "Embeddings Explorer":
         **How to use:**
         1. Select a research cluster from the dropdown menu in the sidebar (or choose "All embeddings")
         2. Enter keywords of interest, separated by commas
-        3. Choose whether to search in paper abstracts or titles
-        4. Optionally check "Show only papers with keyword matches" to filter the visualization
-        5. Click "Generate Plot" to create the visualization
+        3. Use the pipe symbol (|) between terms for OR logic: "metabolite|metabolites" will match papers with either term
+        4. Choose whether to search in paper abstracts or titles
+        5. Optionally check "Show only papers with keyword matches" to filter the visualization
+        6. Click "Generate Plot" to create the visualization
+        
+        **Examples:**
+        - Single keyword: "TOCSY"
+        - Multiple keywords: "breast cancer, colon cancer"
+        - OR relationship: "Deep learning|neural networks, Faecalibacterium"
         
         The visualization displays two plots:
         - **Top plot**: Papers colored by publication year (blue → yellow → red from oldest to newest)
@@ -456,8 +498,14 @@ elif page == "Keyword Trend Analysis":
         
         **How to use:**
         1. Enter one or more keywords of interest, separated by commas
-        2. Select whether to search in paper abstracts or titles
-        3. Click "Generate Trend Analysis" to create the visualization
+        2. Use the pipe symbol (|) between keywords for OR logic: "metabolite|metabolites" will match papers with either term
+        3. Select whether to search in paper abstracts or titles
+        4. Click "Generate Trend Analysis" to create the visualization
+        
+        **Examples:**
+        - Single keyword: "lipidomics"
+        - Multiple keywords: "breast cancer, colon cancer"
+        - OR relationship: "Mass spectrometry|MS|Mass spec, NMR|NMR Spectroscopy|Nuclear Magnetic Resonance"
         
         The graph shows the percentage of papers mentioning each keyword per year, allowing you to:
         - Identify emerging research trends
@@ -467,7 +515,7 @@ elif page == "Keyword Trend Analysis":
         Hover over any point on the graph to see the exact percentage for that year.
         """)
     
-    trend_keywords = st.text_input("Enter Keywords for Trend Analysis (comma-separated)").split(',')
+    trend_keywords = st.text_input("Enter Keywords for Trend Analysis (comma-separated, use | for OR logic)").split(',')
     trend_location = st.selectbox("Select Location for Trend Analysis", options=["abstract", "title"])
     
     if st.button("Generate Trend Analysis"):
