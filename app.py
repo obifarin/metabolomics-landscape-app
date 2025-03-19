@@ -430,7 +430,7 @@ if page == "Home":
              within the dataset, and analyze keyword trends over time. Data was collected
              from PubMed, data range: 1998-early 2024.
     """)
-    st.write("**Link to **[**Preprint**](https://www.biorxiv.org/content/10.1101/2025.03.18.643696v1)")
+    st.write("**Link to** [**Preprint**](https://www.biorxiv.org/content/10.1101/2025.03.18.643696v1)")
 
     st.subheader(""" Demo of App :video_camera:""")
     st.video("https://www.youtube.com/watch?v=ZwG4-E1wtwA")
