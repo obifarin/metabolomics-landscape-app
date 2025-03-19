@@ -432,10 +432,10 @@ if page == "Home":
     """)
 
     st.subheader(""" Demo of App :video_camera:""")
-    st.video("https://www.youtube.com/watch?v=nsfKd4b-H6s")
+    st.video("https://www.youtube.com/watch?v=ZwG4-E1wtwA")
 
-    st.subheader(""" 10-minute Study Summary :movie_camera:""")
-    st.video("https://www.youtube.com/watch?v=eHrCx2LhdCk")
+    #st.subheader(""" 10-minute Study Summary :movie_camera:""")
+    #st.video("https://www.youtube.com/watch?v=eHrCx2LhdCk")
 
 elif page == "Embeddings Explorer":
     st.header("Embeddings :blue[_Explorer_] 🌐")
